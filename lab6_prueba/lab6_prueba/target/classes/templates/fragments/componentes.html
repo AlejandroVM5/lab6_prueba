@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <!-- FRAGMENTO 1: LA CELDA -->
+    <!-- Recibe un objeto 'c' (Celda) y pinta su color de madera y contenido -->
+    <div th:fragment="celdaFrag(c)" 
+         class="border border-dark d-flex justify-content-center align-items-center" 
+         style="width: 60px; height: 60px; font-size: 24px;"
+         th:styleappend="${c.nivelMadera == 3 ? 'background-color: #5c3a21;' : 
+                         c.nivelMadera == 2 ? 'background-color: #8b5a2b;' : 
+                         c.nivelMadera == 1 ? 'background-color: #cd853f;' : 'background-color: white;'}">
+        
+        <!-- Usamos emojis para simplificar (o puedes usar imágenes) -->
+        <span th:if="${c.tieneCacatua}">🦜</span>
+        <span th:if="${c.tieneGirasol}">🌻</span>
+    </div>
+
+
+    <!-- FRAGMENTO 2: EL TABLERO -->
+    <!-- Recibe la matriz del DTO e itera las filas y columnas inyectando el fragmento 1 -->
+    <div th:fragment="tableroFrag(matriz)" class="d-inline-block border border-dark border-3">
+        <div th:each="fila : ${matriz}" class="d-flex">
+            <div th:each="celda : ${fila}">
+                <!-- Aquí inyectamos el fragmento de la celda de arriba -->
+                <div th:replace="~{fragments/componentes :: celdaFrag(${celda})}"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FRAGMENTO 3: EL PANEL DE CONTROL -->
+    <!-- Recibe los picotazos del DTO y dibuja los botones -->
+    <div th:fragment="panelFrag(picotazos)" class="card p-4 text-center shadow">
+        <p class="text-muted fw-bold mb-1">PICOTAZOS DISPONIBLES</p>
+        <h1 class="text-danger fw-bold display-4" th:text="${picotazos}">45</h1>
+        
+        <div class="mt-3">
+            <a href="/cacatua_sulfurea/mover?dir=U" class="btn btn-primary fw-bold px-4 mb-2">U</a><br>
+            <a href="/cacatua_sulfurea/mover?dir=L" class="btn btn-primary fw-bold px-4 me-1">L</a>
+            <a href="/cacatua_sulfurea/mover?dir=D" class="btn btn-primary fw-bold px-4 me-1">D</a>
+            <a href="/cacatua_sulfurea/mover?dir=R" class="btn btn-primary fw-bold px-4">R</a>
+        </div>
+        
+        <a href="/cacatua_sulfurea/reiniciar" class="btn btn-primary w-100 mt-4 fw-bold">Reiniciar</a>
+    </div>
+
+</body>
+</html>
